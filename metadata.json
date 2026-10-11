@@ -1,6 +1,8 @@
 {
-  "name": "Veritas College Management",
+  "name": "UNITY COLLEGE ",
   "description": "Comprehensive college management platform featuring streamlined student registration, interactive grading systems, and real-time attendance tracking for professors.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

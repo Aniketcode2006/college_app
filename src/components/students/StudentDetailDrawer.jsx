@@ -1,26 +1,17 @@
 import React from 'react';
-import { Student } from '../../types';
-import { useCollege } from '../../context/CollegeContext';
+import { useCollege } from '../../context/CollegeContext.jsx';
 import { 
   X, 
   Mail, 
   Phone, 
   MapPin, 
-  Calendar, 
-  BookOpen, 
   Award, 
   Radio, 
   Trash2, 
   AlertTriangle 
 } from 'lucide-react';
 
-interface StudentDetailDrawerProps {
-  student: Student | null;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
+export const StudentDetailDrawer = ({
   student,
   isOpen,
   onClose,
@@ -44,16 +35,24 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/40 backdrop-blur-xs">
       <div className="relative w-full max-w-md h-full bg-white shadow-2xl border-l border-slate-200 flex flex-col justify-between overflow-hidden animate-in slide-in-from-right duration-200">
         {/* Top Header */}
-        <div className="p-6 border-b border-slate-200 bg-slate-50">
+        <div className="p-5 border-b border-slate-200 bg-slate-50">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div
-                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${student.avatarBg} text-white flex items-center justify-center font-bold text-lg shadow-sm`}
-              >
-                {student.firstName[0]}
-              </div>
+              {student.avatarUrl ? (
+                <img
+                  src={student.avatarUrl}
+                  alt={student.firstName}
+                  className="w-11 h-11 rounded-full object-cover border-2 border-indigo-200 shadow-sm"
+                />
+              ) : (
+                <div
+                  className={`w-11 h-11 rounded-xl bg-gradient-to-br ${student.avatarBg} text-white flex items-center justify-center font-bold text-base shadow-sm`}
+                >
+                  {student.firstName[0]}
+                </div>
+              )}
               <div>
-                <h2 className="text-base font-bold text-slate-900">
+                <h2 className="text-sm font-bold text-slate-900">
                   {student.firstName} {student.lastName}
                 </h2>
                 <div className="text-xs font-mono text-slate-500">
@@ -63,16 +62,16 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+              className="text-slate-400 hover:text-slate-600 p-1 rounded-md cursor-pointer"
               aria-label="Close drawer"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Scrollable Body */}
-        <div className="p-6 space-y-6 overflow-y-auto flex-1 text-xs">
+        <div className="p-5 space-y-5 overflow-y-auto flex-1 text-xs">
           {/* Standing Banner */}
           <div className="grid grid-cols-2 gap-3">
             <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
@@ -122,10 +121,10 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
 
           {/* Academic Details */}
           <div>
-            <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] mb-2">
+            <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] mb-1.5">
               Academic Program
             </h3>
-            <div className="space-y-1.5 bg-slate-50 p-3 rounded-lg border border-slate-100 text-slate-700">
+            <div className="space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-100 text-slate-700">
               <div className="flex justify-between">
                 <span className="text-slate-400">Department:</span>
                 <span className="font-medium text-slate-900 text-right">{student.department}</span>
@@ -151,10 +150,10 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
 
           {/* Contact Details */}
           <div>
-            <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] mb-2">
+            <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] mb-1.5">
               Contact & Residence
             </h3>
-            <div className="space-y-2 text-slate-700">
+            <div className="space-y-1.5 text-slate-700">
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-slate-400" />
                 <span className="font-mono text-indigo-700">{student.email}</span>
@@ -172,10 +171,10 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
 
           {/* Emergency Contact */}
           <div>
-            <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] mb-2">
+            <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] mb-1.5">
               Emergency Contact
             </h3>
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1 text-slate-700">
+            <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5 text-slate-700">
               <div className="font-semibold text-slate-900">
                 {student.emergencyContact.name} ({student.emergencyContact.relationship})
               </div>
@@ -187,12 +186,12 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
 
           {/* Enrolled Courses */}
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1.5">
               <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px]">
                 Active Enrolled Courses ({enrolledCourses.length})
               </h3>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {enrolledCourses.length === 0 ? (
                 <p className="text-slate-400 italic">No courses currently enrolled.</p>
               ) : (
@@ -216,11 +215,11 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
         </div>
 
         {/* Footer actions */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+        <div className="p-3.5 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
           {role === 'admin' && (
             <button
               onClick={handleDelete}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Withdraw Student</span>
@@ -228,7 +227,7 @@ export const StudentDetailDrawer: React.FC<StudentDetailDrawerProps> = ({
           )}
           <button
             onClick={onClose}
-            className="ml-auto px-4 py-1.5 text-xs font-medium text-slate-700 bg-slate-200 hover:bg-slate-300 rounded-lg transition-colors"
+            className="ml-auto px-4 py-1.5 text-xs font-medium text-slate-700 bg-slate-200 hover:bg-slate-300 rounded-lg transition-colors cursor-pointer"
           >
             Close
           </button>

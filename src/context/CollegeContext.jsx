@@ -1,23 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { 
-  Student, 
-  Course, 
-  StudentGradeRecord, 
-  AttendanceSession, 
-  AttendanceStatus, 
-  UserRole, 
-  ActiveNavTab,
-  AssessmentItem 
-} from '../types';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   INITIAL_STUDENTS, 
   INITIAL_COURSES, 
   INITIAL_GRADES, 
   INITIAL_LIVE_SESSION, 
   PAST_SESSIONS 
-} from '../data/mockData';
+} from '../data/mockData.js';
 
-export function calculateGrade(weightedScore: number): { letterGrade: string; gpaPoint: number } {
+export function calculateGrade(weightedScore) {
   if (weightedScore >= 97) return { letterGrade: 'A+', gpaPoint: 4.0 };
   if (weightedScore >= 93) return { letterGrade: 'A', gpaPoint: 4.0 };
   if (weightedScore >= 90) return { letterGrade: 'A-', gpaPoint: 3.7 };
@@ -32,115 +22,125 @@ export function calculateGrade(weightedScore: number): { letterGrade: string; gp
   return { letterGrade: 'F', gpaPoint: 0.0 };
 }
 
-interface ToastMessage {
-  id: string;
-  message: string;
-  type: 'success' | 'info' | 'error';
-}
+const CollegeContext = createContext(null);
 
-interface CollegeContextType {
-  role: UserRole;
-  setRole: (role: UserRole) => void;
-  activeTab: ActiveNavTab;
-  setActiveTab: (tab: ActiveNavTab) => void;
-  students: Student[];
-  courses: Course[];
-  grades: StudentGradeRecord[];
-  liveSession: AttendanceSession;
-  pastSessions: AttendanceSession[];
-  selectedCourseId: string;
-  setSelectedCourseId: (id: string) => void;
-  toasts: ToastMessage[];
-  showToast: (message: string, type?: 'success' | 'info' | 'error') => void;
-  dismissToast: (id: string) => void;
-
-  // Course Catalog CRUD (Admin & Student)
-  addCourse: (courseData: Omit<Course, 'id' | 'enrolledStudentIds' | 'assessments'>) => Course;
-  updateCourse: (id: string, updates: Partial<Course>) => void;
-  deleteCourse: (id: string) => void;
-  toggleEnrollment: (courseId: string, studentId: string) => void;
-
-  // Student Registration & Directory
-  registerStudent: (data: Omit<Student, 'id' | 'studentId' | 'avatarBg'>) => Student;
-  updateStudent: (id: string, updates: Partial<Student>) => void;
-  deleteStudent: (id: string) => void;
-
-  // Attendance Tracker
-  updateAttendanceStatus: (
-    studentId: string, 
-    status: AttendanceStatus, 
-    method?: 'Manual' | 'QR Code' | 'NFC Card', 
-    notes?: string
-  ) => void;
-  markAllPresent: () => void;
-  clearAllAttendance: () => void;
-  simulateRandomCheckIn: () => void;
-  toggleSessionLive: (isLive: boolean) => void;
-
-  // Grading System
-  updateGradeScore: (recordId: string, assessmentId: string, score: number) => void;
-  publishGrades: (courseId: string) => void;
-  unpublishGrades: (courseId: string) => void;
-
-  // Reset
-  resetToDefaults: () => void;
-}
-
-const CollegeContext = createContext<CollegeContextType | undefined>(undefined);
-
-export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [role, setRole] = useState<UserRole>(() => {
-    return (localStorage.getItem('veritas_role') as UserRole) || 'admin';
+export const CollegeProvider = ({ children }) => {
+  // Authentication & Role
+  const [role, setRole] = useState(() => {
+    return localStorage.getItem('unity_role') || 'student';
   });
 
-  const [activeTab, setActiveTab] = useState<ActiveNavTab>('dashboard');
-
-  const [students, setStudents] = useState<Student[]>(() => {
-    const saved = localStorage.getItem('veritas_students');
-    return saved ? JSON.parse(saved) : INITIAL_STUDENTS;
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const saved = localStorage.getItem('unity_auth');
+    return saved !== null ? saved === 'true' : true;
   });
 
-  const [courses, setCourses] = useState<Course[]>(() => {
-    const saved = localStorage.getItem('veritas_courses');
-    return saved ? JSON.parse(saved) : INITIAL_COURSES;
+  const [currentStudentId, setCurrentStudentId] = useState(() => {
+    return localStorage.getItem('unity_student_id') || 's-1';
   });
 
-  const [grades, setGrades] = useState<StudentGradeRecord[]>(() => {
-    const saved = localStorage.getItem('veritas_grades');
-    return saved ? JSON.parse(saved) : INITIAL_GRADES;
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  // Sidebar collapse state
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem('unity_sidebar_collapsed');
+    return saved !== null ? saved === 'true' : true;
   });
 
-  const [liveSession, setLiveSession] = useState<AttendanceSession>(() => {
-    const saved = localStorage.getItem('veritas_live_session');
-    return saved ? JSON.parse(saved) : INITIAL_LIVE_SESSION;
+  // Table density mode: 'compact' or 'comfortable'
+  const [isCompactMode, setIsCompactMode] = useState(() => {
+    const saved = localStorage.getItem('unity_compact_mode');
+    return saved !== null ? saved === 'true' : true; // Default compact as requested
   });
 
-  const [pastSessions] = useState<AttendanceSession[]>(INITIAL_SESSIONS_WRAP);
-  const [selectedCourseId, setSelectedCourseId] = useState<string>('c-1');
-  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  // Primary Data Collections
+  const [students, setStudents] = useState(() => {
+    const saved = localStorage.getItem('unity_students') || localStorage.getItem('veritas_students');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return INITIAL_STUDENTS;
+  });
+
+  const [courses, setCourses] = useState(() => {
+    const saved = localStorage.getItem('unity_courses') || localStorage.getItem('veritas_courses');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return INITIAL_COURSES;
+  });
+
+  const [grades, setGrades] = useState(() => {
+    const saved = localStorage.getItem('unity_grades') || localStorage.getItem('veritas_grades');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return INITIAL_GRADES;
+  });
+
+  const [liveSession, setLiveSession] = useState(() => {
+    const saved = localStorage.getItem('unity_live_session') || localStorage.getItem('veritas_live_session');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return INITIAL_LIVE_SESSION;
+  });
+
+  const [pastSessions] = useState(PAST_SESSIONS);
+  const [selectedCourseId, setSelectedCourseId] = useState('c-1');
+  const [toasts, setToasts] = useState([]);
+
+  // Current logged in student
+  const currentStudent = students.find((s) => s.id === currentStudentId) || (students.length > 0 ? students[0] : undefined);
 
   // Persist to localStorage
   useEffect(() => {
-    localStorage.setItem('veritas_role', role);
+    localStorage.setItem('unity_role', role);
   }, [role]);
 
   useEffect(() => {
-    localStorage.setItem('veritas_students', JSON.stringify(students));
+    localStorage.setItem('unity_auth', String(isAuthenticated));
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (currentStudentId) {
+      localStorage.setItem('unity_student_id', currentStudentId);
+    }
+  }, [currentStudentId]);
+
+  useEffect(() => {
+    localStorage.setItem('unity_sidebar_collapsed', String(isSidebarCollapsed));
+  }, [isSidebarCollapsed]);
+
+  useEffect(() => {
+    localStorage.setItem('unity_compact_mode', String(isCompactMode));
+  }, [isCompactMode]);
+
+  useEffect(() => {
+    localStorage.setItem('unity_students', JSON.stringify(students));
   }, [students]);
 
   useEffect(() => {
-    localStorage.setItem('veritas_courses', JSON.stringify(courses));
+    localStorage.setItem('unity_courses', JSON.stringify(courses));
   }, [courses]);
 
   useEffect(() => {
-    localStorage.setItem('veritas_grades', JSON.stringify(grades));
+    localStorage.setItem('unity_grades', JSON.stringify(grades));
   }, [grades]);
 
   useEffect(() => {
-    localStorage.setItem('veritas_live_session', JSON.stringify(liveSession));
+    localStorage.setItem('unity_live_session', JSON.stringify(liveSession));
   }, [liveSession]);
 
-  const showToast = (message: string, type: 'success' | 'info' | 'error' = 'info') => {
+  const showToast = (message, type = 'info') => {
     const id = `${Date.now()}-${Math.random()}`;
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
@@ -148,24 +148,112 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     }, 3800);
   };
 
-  const dismissToast = (id: string) => {
+  const dismissToast = (id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // COURSE MANAGEMENT
-  const addCourse = (courseData: Omit<Course, 'id' | 'enrolledStudentIds' | 'assessments'>): Course => {
-    const defaultAssessments: AssessmentItem[] = [
-      { id: `asm-${Date.now()}-1`, name: 'Homework & Assignments', category: 'Assignments', weight: 25, maxScore: 100 },
-      { id: `asm-${Date.now()}-2`, name: 'Midterm Examination', category: 'Midterm Exam', weight: 25, maxScore: 100 },
-      { id: `asm-${Date.now()}-3`, name: 'Course Project / Labs', category: 'Lab Projects', weight: 25, maxScore: 100 },
-      { id: `asm-${Date.now()}-4`, name: 'Final Examination', category: 'Final Exam', weight: 25, maxScore: 100 },
-    ];
+  // Student Authentication
+  const loginAsStudent = (identifier) => {
+    const clean = identifier.trim().toLowerCase();
+    if (!clean) {
+      showToast('Please enter your Student ID or university email.', 'error');
+      return false;
+    }
 
-    const newCourse: Course = {
+    const found = students.find((s) => 
+      s.studentId.toLowerCase() === clean ||
+      s.email.toLowerCase() === clean ||
+      s.firstName.toLowerCase() === clean ||
+      s.lastName.toLowerCase() === clean ||
+      `${s.firstName} ${s.lastName}`.toLowerCase() === clean ||
+      s.id.toLowerCase() === clean
+    ) || students.find((s) =>
+      s.studentId.toLowerCase().includes(clean) ||
+      s.email.toLowerCase().includes(clean) ||
+      `${s.firstName} ${s.lastName}`.toLowerCase().includes(clean)
+    );
+
+    if (found) {
+      setCurrentStudentId(found.id);
+      setRole('student');
+      setIsAuthenticated(true);
+      setActiveTab('dashboard');
+      showToast(`Welcome back, ${found.firstName} ${found.lastName}! Logged in as ${found.studentId}.`, 'success');
+      return true;
+    }
+
+    showToast(`No student found matching "${identifier}". Try student ID like STU-2024-001 or select from the student roster.`, 'error');
+    return false;
+  };
+
+  const loginAsFaculty = (targetRole) => {
+    setRole(targetRole);
+    setIsAuthenticated(true);
+    setActiveTab('dashboard');
+    showToast(`Signed in as ${targetRole === 'admin' ? 'Academic Registrar (Admin)' : 'Faculty Professor'}.`, 'success');
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    showToast('Signed out of Unity College Portal.', 'info');
+  };
+
+  // Real-time Student Self Check-In
+  const studentSelfCheckIn = (token) => {
+    if (!currentStudent) {
+      return { success: false, message: 'Please log in as a student to check in.' };
+    }
+
+    if (!liveSession.isLive) {
+      showToast('No live attendance session is active right now.', 'error');
+      return { success: false, message: 'Lecture session is currently closed.' };
+    }
+
+    const isEnrolled = currentStudent.enrolledCourseIds.includes(liveSession.courseId);
+    if (!isEnrolled) {
+      showToast(`You are not enrolled in ${liveSession.courseCode}.`, 'error');
+      return { success: false, message: `You are not enrolled in ${liveSession.courseCode}.` };
+    }
+
+    const alreadyChecked = liveSession.records[currentStudent.id]?.status === 'Present';
+    if (alreadyChecked) {
+      showToast(`You are already marked Present for ${liveSession.courseCode}!`, 'info');
+      return { success: true, message: 'Already checked in!' };
+    }
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    setLiveSession((prev) => ({
+      ...prev,
+      records: {
+        ...prev.records,
+        [currentStudent.id]: {
+          status: 'Present',
+          timestamp: timeStr,
+          method: 'QR Code',
+          notes: token ? `Verified via token (${token})` : 'Student portal instant check-in',
+        },
+      },
+    }));
+
+    showToast(`✓ Check-In Confirmed! ${currentStudent.firstName} marked Present at ${timeStr}.`, 'success');
+    return { success: true, message: 'Attendance verified!' };
+  };
+
+  // COURSE CATALOG CRUD
+  const addCourse = (courseData) => {
+    const newId = `c-${Date.now()}`;
+    const newCourse = {
       ...courseData,
-      id: `c-${Date.now()}`,
+      id: newId,
       enrolledStudentIds: [],
-      assessments: defaultAssessments,
+      assessments: [
+        { id: `asm-${newId}-1`, name: 'Assignments & Quizzes', category: 'Assignments', weight: 25, maxScore: 100 },
+        { id: `asm-${newId}-2`, name: 'Midterm Examination', category: 'Midterm Exam', weight: 30, maxScore: 100 },
+        { id: `asm-${newId}-3`, name: 'Term Project / Lab', category: 'Lab Projects', weight: 35, maxScore: 100 },
+        { id: `asm-${newId}-4`, name: 'Attendance & Engagement', category: 'Attendance', weight: 10, maxScore: 100 },
+      ],
     };
 
     setCourses((prev) => [newCourse, ...prev]);
@@ -173,25 +261,23 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     return newCourse;
   };
 
-  const updateCourse = (id: string, updates: Partial<Course>) => {
+  const updateCourse = (id, updates) => {
     setCourses((prev) =>
       prev.map((c) => (c.id === id ? { ...c, ...updates } : c))
     );
     showToast('Course details updated successfully.', 'success');
   };
 
-  const deleteCourse = (id: string) => {
+  const deleteCourse = (id) => {
     const courseToDelete = courses.find((c) => c.id === id);
     if (!courseToDelete) return;
     setCourses((prev) => prev.filter((c) => c.id !== id));
-    // Remove from students' enrolledCourseIds
     setStudents((prev) =>
       prev.map((s) => ({
         ...s,
         enrolledCourseIds: s.enrolledCourseIds.filter((cid) => cid !== id),
       }))
     );
-    // Remove grades
     setGrades((prev) => prev.filter((g) => g.courseId !== id));
     if (selectedCourseId === id) {
       setSelectedCourseId(courses.find((c) => c.id !== id)?.id || '');
@@ -199,14 +285,13 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     showToast(`Course "${courseToDelete.code}" deleted.`, 'info');
   };
 
-  const toggleEnrollment = (courseId: string, studentId: string) => {
+  const toggleEnrollment = (courseId, studentId) => {
     const course = courses.find((c) => c.id === courseId);
     if (!course) return;
 
     const isEnrolled = course.enrolledStudentIds.includes(studentId);
 
     if (isEnrolled) {
-      // Unenroll
       setCourses((prev) =>
         prev.map((c) =>
           c.id === courseId
@@ -223,7 +308,6 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
       );
       showToast(`Dropped from course ${course.code}.`, 'info');
     } else {
-      // Check capacity
       if (course.enrolledStudentIds.length >= course.capacity) {
         showToast(`Cannot enroll: ${course.code} is at maximum capacity (${course.capacity}).`, 'error');
         return;
@@ -242,11 +326,10 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
             : s
         )
       );
-      // Create empty grade record if none exists
       setGrades((prev) => {
         const exists = prev.some((g) => g.courseId === courseId && g.studentId === studentId);
         if (exists) return prev;
-        const newRecord: StudentGradeRecord = {
+        const newRecord = {
           id: `g-${Date.now()}`,
           studentId,
           courseId,
@@ -264,7 +347,7 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   // STUDENT REGISTRATION
-  const registerStudent = (data: Omit<Student, 'id' | 'studentId' | 'avatarBg'>): Student => {
+  const registerStudent = (data) => {
     const currentYear = new Date().getFullYear();
     const count = students.length + 1;
     const studentId = `STU-${currentYear}-${String(count).padStart(3, '0')}`;
@@ -278,7 +361,7 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     ];
     const avatarBg = avatarGradients[Math.floor(Math.random() * avatarGradients.length)];
 
-    const newStudent: Student = {
+    const newStudent = {
       ...data,
       id: `s-${Date.now()}`,
       studentId,
@@ -287,8 +370,7 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     setStudents((prev) => [newStudent, ...prev]);
 
-    // Enroll in selected courses
-    if (newStudent.enrolledCourseIds.length > 0) {
+    if (newStudent.enrolledCourseIds && newStudent.enrolledCourseIds.length > 0) {
       setCourses((prev) =>
         prev.map((c) =>
           newStudent.enrolledCourseIds.includes(c.id)
@@ -302,35 +384,33 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     return newStudent;
   };
 
-  const updateStudent = (id: string, updates: Partial<Student>) => {
+  const updateStudent = (id, updates) => {
     setStudents((prev) =>
       prev.map((s) => (s.id === id ? { ...s, ...updates } : s))
     );
     showToast('Student profile updated.', 'success');
   };
 
-  const deleteStudent = (id: string) => {
+  const deleteStudent = (id) => {
     const student = students.find((s) => s.id === id);
     if (!student) return;
     setStudents((prev) => prev.filter((s) => s.id !== id));
-    // Remove from courses
     setCourses((prev) =>
       prev.map((c) => ({
         ...c,
         enrolledStudentIds: c.enrolledStudentIds.filter((sid) => sid !== id),
       }))
     );
-    // Remove grades
     setGrades((prev) => prev.filter((g) => g.studentId !== id));
     showToast(`Removed student ${student.firstName} ${student.lastName}.`, 'info');
   };
 
   // ATTENDANCE METHODS
   const updateAttendanceStatus = (
-    studentId: string, 
-    status: AttendanceStatus, 
-    method: 'Manual' | 'QR Code' | 'NFC Card' = 'Manual',
-    notes?: string
+    studentId, 
+    status, 
+    method = 'Manual',
+    notes
   ) => {
     const now = new Date();
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -383,7 +463,6 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
   const simulateRandomCheckIn = () => {
     const activeCourse = courses.find((c) => c.id === liveSession.courseId);
     const candidateIds = activeCourse?.enrolledStudentIds || [];
-    // Find students not yet present
     const notPresent = candidateIds.filter((sid) => {
       const rec = liveSession.records[sid];
       return !rec || rec.status !== 'Present';
@@ -399,7 +478,7 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     const now = new Date();
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    const methods: ('QR Code' | 'NFC Card')[] = ['QR Code', 'NFC Card'];
+    const methods = ['QR Code', 'NFC Card'];
     const chosenMethod = methods[Math.floor(Math.random() * methods.length)];
 
     setLiveSession((prev) => ({
@@ -419,19 +498,18 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
-  const toggleSessionLive = (isLive: boolean) => {
+  const toggleSessionLive = (isLive) => {
     setLiveSession((prev) => ({ ...prev, isLive }));
     showToast(isLive ? 'Lecture attendance session is now LIVE' : 'Attendance session concluded & saved.', 'info');
   };
 
   // GRADING METHODS
-  const updateGradeScore = (recordId: string, assessmentId: string, score: number) => {
+  const updateGradeScore = (recordId, assessmentId, score) => {
     setGrades((prev) =>
       prev.map((g) => {
         if (g.id !== recordId) return g;
         const newScores = { ...g.scores, [assessmentId]: score };
         
-        // Find course to get assessment weights
         const course = courses.find((c) => c.id === g.courseId);
         let weighted = 0;
         let totalWeight = 0;
@@ -461,14 +539,14 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     );
   };
 
-  const publishGrades = (courseId: string) => {
+  const publishGrades = (courseId) => {
     setGrades((prev) =>
       prev.map((g) => (g.courseId === courseId ? { ...g, status: 'Published' } : g))
     );
     showToast('Final term grades published to student academic records.', 'success');
   };
 
-  const unpublishGrades = (courseId: string) => {
+  const unpublishGrades = (courseId) => {
     setGrades((prev) =>
       prev.map((g) => (g.courseId === courseId ? { ...g, status: 'Draft' } : g))
     );
@@ -476,6 +554,12 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const resetToDefaults = () => {
+    localStorage.removeItem('unity_students');
+    localStorage.removeItem('unity_courses');
+    localStorage.removeItem('unity_grades');
+    localStorage.removeItem('unity_live_session');
+    localStorage.removeItem('unity_role');
+    localStorage.removeItem('unity_student_id');
     localStorage.removeItem('veritas_students');
     localStorage.removeItem('veritas_courses');
     localStorage.removeItem('veritas_grades');
@@ -484,6 +568,9 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     setCourses(INITIAL_COURSES);
     setGrades(INITIAL_GRADES);
     setLiveSession(INITIAL_LIVE_SESSION);
+    setRole('student');
+    setCurrentStudentId('s-1');
+    setIsAuthenticated(true);
     showToast('Demo environment reset to initial campus state.', 'info');
   };
 
@@ -504,6 +591,18 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
         toasts,
         showToast,
         dismissToast,
+        isSidebarCollapsed,
+        setIsSidebarCollapsed,
+        isCompactMode,
+        setIsCompactMode,
+        isAuthenticated,
+        currentStudentId,
+        setCurrentStudentId,
+        currentStudent,
+        loginAsStudent,
+        loginAsFaculty,
+        logout,
+        studentSelfCheckIn,
         addCourse,
         updateCourse,
         deleteCourse,
@@ -526,8 +625,6 @@ export const CollegeProvider: React.FC<{ children: ReactNode }> = ({ children })
     </CollegeContext.Provider>
   );
 };
-
-const INITIAL_SESSIONS_WRAP = PAST_SESSIONS;
 
 export const useCollege = () => {
   const context = useContext(CollegeContext);

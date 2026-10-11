@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import { useCollege } from '../../context/CollegeContext';
-import { Department, AcademicYear, StudentStatus } from '../../types';
+import { useCollege } from '../../context/CollegeContext.jsx';
 import { X, UserPlus, AlertCircle } from 'lucide-react';
 
-interface StudentRegisterModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const DEPARTMENTS: Department[] = [
+const DEPARTMENTS = [
   'Computer Science & Engineering',
   'Electrical & Computer Engineering',
   'Biological & Biomedical Sciences',
@@ -16,21 +10,21 @@ const DEPARTMENTS: Department[] = [
   'Business & Economics',
 ];
 
-const YEARS: AcademicYear[] = ['Freshman', 'Sophomore', 'Junior', 'Senior'];
+const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior'];
 
-export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOpen, onClose }) => {
+export const StudentRegisterModal = ({ isOpen, onClose }) => {
   const { registerStudent, courses } = useCollege();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [department, setDepartment] = useState<Department>('Computer Science & Engineering');
+  const [department, setDepartment] = useState('Computer Science & Engineering');
   const [program, setProgram] = useState('B.Sc. Computer Science');
-  const [year, setYear] = useState<AcademicYear>('Freshman');
+  const [year, setYear] = useState('Freshman');
   const [cohort, setCohort] = useState('Class of 2030');
   const [enrollmentDate, setEnrollmentDate] = useState('2026-09-01');
-  const [status, setStatus] = useState<StudentStatus>('Active');
+  const [status, setStatus] = useState('Active');
   const [advisor, setAdvisor] = useState('Prof. Dr. Evelyn Vance');
   const [address, setAddress] = useState('Campus Residential Quad 101');
   
@@ -40,13 +34,13 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
   const [emPhone, setEmPhone] = useState('');
 
   // Course Enrollment Selection
-  const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>(['c-1']);
+  const [selectedCourseIds, setSelectedCourseIds] = useState(['c-1']);
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!firstName.trim() || !lastName.trim()) {
       setError('Please provide student first and last name.');
@@ -68,8 +62,8 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
       cohort,
       enrollmentDate,
       status,
-      gpa: 4.0, // Initial term GPA
-      attendanceRate: 100.0, // Initial attendance
+      gpa: 4.0,
+      attendanceRate: 100.0,
       advisor: advisor.trim(),
       emergencyContact: {
         name: emName.trim() || 'Primary Guardian',
@@ -83,7 +77,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
     onClose();
   };
 
-  const handleCourseToggle = (courseId: string) => {
+  const handleCourseToggle = (courseId) => {
     setSelectedCourseIds((prev) =>
       prev.includes(courseId) ? prev.filter((id) => id !== courseId) : [...prev, courseId]
     );
@@ -93,7 +87,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs overflow-y-auto">
       <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden my-8">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
               <UserPlus className="w-4 h-4" />
@@ -109,7 +103,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+            className="text-slate-400 hover:text-slate-600 p-1 rounded-md cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="w-4 h-4" />
@@ -117,7 +111,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[78vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[76vh] overflow-y-auto">
           {error && (
             <div className="flex items-center gap-2 p-3 text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded-lg">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -130,7 +124,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
               1. Personal Information
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   First Name *
@@ -159,7 +153,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Institutional Email *
@@ -168,7 +162,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="student.name@veritas.edu"
+                  placeholder="student.name@unity.edu"
                   className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   required
                 />
@@ -202,18 +196,18 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
           </div>
 
           {/* Academic Information */}
-          <div className="pt-3 border-t border-slate-100">
+          <div className="pt-2 border-t border-slate-100">
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
               2. Academic Program
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Department
                 </label>
                 <select
                   value={department}
-                  onChange={(e) => setDepartment(e.target.value as Department)}
+                  onChange={(e) => setDepartment(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
                 >
                   {DEPARTMENTS.map((dept) => (
@@ -237,14 +231,14 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Academic Standing
                 </label>
                 <select
                   value={year}
-                  onChange={(e) => setYear(e.target.value as AcademicYear)}
+                  onChange={(e) => setYear(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
                 >
                   {YEARS.map((y) => (
@@ -280,8 +274,8 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
           </div>
 
           {/* Initial Course Enrollment */}
-          <div className="pt-3 border-t border-slate-100">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
+          <div className="pt-2 border-t border-slate-100">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1.5">
               3. Initial Course Enrollments
             </h3>
             <p className="text-[11px] text-slate-500 mb-2">
@@ -295,7 +289,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
                     type="button"
                     key={course.id}
                     onClick={() => handleCourseToggle(course.id)}
-                    className={`p-2 rounded-lg border text-left text-xs transition-colors flex items-center justify-between ${
+                    className={`p-2 rounded-lg border text-left text-xs transition-colors flex items-center justify-between cursor-pointer ${
                       isSelected
                         ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 font-medium'
                         : 'border-slate-200 hover:bg-slate-50 text-slate-700'
@@ -317,7 +311,7 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
           </div>
 
           {/* Emergency Contact */}
-          <div className="pt-3 border-t border-slate-100">
+          <div className="pt-2 border-t border-slate-100">
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
               4. Emergency Contact
             </h3>
@@ -356,17 +350,17 @@ export const StudentRegisterModal: React.FC<StudentRegisterModalProps> = ({ isOp
           </div>
 
           {/* Form Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+              className="px-3.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-xs"
+              className="px-3.5 py-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-xs cursor-pointer"
             >
               Register & Matriculate
             </button>

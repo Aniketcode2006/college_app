@@ -1,12 +1,10 @@
-import { Student, Course, AttendanceSession, StudentGradeRecord } from '../types';
-
-export const INITIAL_STUDENTS: Student[] = [
+export const INITIAL_STUDENTS = [
   {
     id: 's-1',
     studentId: 'STU-2024-001',
     firstName: 'Maya',
     lastName: 'Lin',
-    email: 'maya.lin@veritas.edu',
+    email: 'maya.lin@unity.edu',
     phone: '+1 (555) 234-8901',
     department: 'Computer Science & Engineering',
     program: 'B.Sc. Computer Science',
@@ -31,7 +29,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-002',
     firstName: 'Marcus',
     lastName: 'Sterling',
-    email: 'marcus.sterling@veritas.edu',
+    email: 'marcus.sterling@unity.edu',
     phone: '+1 (555) 345-6712',
     department: 'Computer Science & Engineering',
     program: 'B.Sc. Software Engineering',
@@ -56,7 +54,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-003',
     firstName: 'Sofia',
     lastName: 'Alvarez',
-    email: 'sofia.alvarez@veritas.edu',
+    email: 'sofia.alvarez@unity.edu',
     phone: '+1 (555) 901-2345',
     department: 'Electrical & Computer Engineering',
     program: 'B.Eng. Robotics & Embedded Systems',
@@ -81,7 +79,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-004',
     firstName: 'Devon',
     lastName: 'Choudhury',
-    email: 'devon.choudhury@veritas.edu',
+    email: 'devon.choudhury@unity.edu',
     phone: '+1 (555) 412-9844',
     department: 'Computer Science & Engineering',
     program: 'B.Sc. Data Science & AI',
@@ -90,7 +88,7 @@ export const INITIAL_STUDENTS: Student[] = [
     enrollmentDate: '2025-08-22',
     status: 'Active',
     gpa: 3.12,
-    attendanceRate: 72.4, // At-risk attendance
+    attendanceRate: 72.4,
     advisor: 'Prof. Dr. Evelyn Vance',
     emergencyContact: {
       name: 'Anita Choudhury',
@@ -106,7 +104,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-005',
     firstName: 'Amara',
     lastName: 'Okafor',
-    email: 'amara.okafor@veritas.edu',
+    email: 'amara.okafor@unity.edu',
     phone: '+1 (555) 834-5511',
     department: 'Biological & Biomedical Sciences',
     program: 'B.Sc. Computational Biology',
@@ -131,7 +129,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-006',
     firstName: 'Liam',
     lastName: 'O\'Connor',
-    email: 'liam.oconnor@veritas.edu',
+    email: 'liam.oconnor@unity.edu',
     phone: '+1 (555) 672-3341',
     department: 'Mathematics & Statistics',
     program: 'B.Sc. Applied Mathematics',
@@ -156,7 +154,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-007',
     firstName: 'Elena',
     lastName: 'Rostova',
-    email: 'elena.rostova@veritas.edu',
+    email: 'elena.rostova@unity.edu',
     phone: '+1 (555) 554-1233',
     department: 'Computer Science & Engineering',
     program: 'B.Sc. Computer Science',
@@ -181,7 +179,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-008',
     firstName: 'Kofi',
     lastName: 'Boateng',
-    email: 'kofi.boateng@veritas.edu',
+    email: 'kofi.boateng@unity.edu',
     phone: '+1 (555) 789-0123',
     department: 'Electrical & Computer Engineering',
     program: 'B.Eng. Computer Engineering',
@@ -189,8 +187,8 @@ export const INITIAL_STUDENTS: Student[] = [
     cohort: 'Class of 2027',
     enrollmentDate: '2024-08-25',
     status: 'Academic Probation',
-    gpa: 1.95, // At-risk GPA
-    attendanceRate: 68.2, // At-risk attendance
+    gpa: 1.95,
+    attendanceRate: 68.2,
     advisor: 'Prof. Arthur Pendelton',
     emergencyContact: {
       name: 'Kwame Boateng',
@@ -206,7 +204,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-009',
     firstName: 'Zoe',
     lastName: 'Katsaros',
-    email: 'zoe.katsaros@veritas.edu',
+    email: 'zoe.katsaros@unity.edu',
     phone: '+1 (555) 321-7654',
     department: 'Business & Economics',
     program: 'B.A. Quantitative Economics',
@@ -231,7 +229,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-010',
     firstName: 'Julian',
     lastName: 'Mercer',
-    email: 'julian.mercer@veritas.edu',
+    email: 'julian.mercer@unity.edu',
     phone: '+1 (555) 456-7890',
     department: 'Computer Science & Engineering',
     program: 'B.Sc. Cybersecurity & Networks',
@@ -256,7 +254,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-011',
     firstName: 'Hana',
     lastName: 'Takahashi',
-    email: 'hana.takahashi@veritas.edu',
+    email: 'hana.takahashi@unity.edu',
     phone: '+1 (555) 567-8901',
     department: 'Biological & Biomedical Sciences',
     program: 'B.Sc. Biomedical Informatics',
@@ -281,7 +279,7 @@ export const INITIAL_STUDENTS: Student[] = [
     studentId: 'STU-2024-012',
     firstName: 'Gabriel',
     lastName: 'Santoro',
-    email: 'gabriel.santoro@veritas.edu',
+    email: 'gabriel.santoro@unity.edu',
     phone: '+1 (555) 678-9012',
     department: 'Computer Science & Engineering',
     program: 'B.Sc. Computer Science',
@@ -303,7 +301,7 @@ export const INITIAL_STUDENTS: Student[] = [
   },
 ];
 
-export const INITIAL_COURSES: Course[] = [
+export const INITIAL_COURSES = [
   {
     id: 'c-1',
     code: 'CS-301',
@@ -317,7 +315,7 @@ export const INITIAL_COURSES: Course[] = [
       id: 'inst-1',
       name: 'Dr. Evelyn Vance',
       title: 'Professor & Department Chair',
-      email: 'e.vance@veritas.edu',
+      email: 'e.vance@unity.edu',
       office: 'Turing Hall 410',
     },
     term: 'Fall 2026',
@@ -348,7 +346,7 @@ export const INITIAL_COURSES: Course[] = [
       id: 'inst-1',
       name: 'Dr. Evelyn Vance',
       title: 'Professor & Department Chair',
-      email: 'e.vance@veritas.edu',
+      email: 'e.vance@unity.edu',
       office: 'Turing Hall 410',
     },
     term: 'Fall 2026',
@@ -378,7 +376,7 @@ export const INITIAL_COURSES: Course[] = [
       id: 'inst-2',
       name: 'Prof. Arthur Pendelton',
       title: 'Associate Professor',
-      email: 'a.pendelton@veritas.edu',
+      email: 'a.pendelton@unity.edu',
       office: 'Maxwell Center 202',
     },
     term: 'Fall 2026',
@@ -408,7 +406,7 @@ export const INITIAL_COURSES: Course[] = [
       id: 'inst-3',
       name: 'Dr. Gregory Thorne',
       title: 'Reader in Probability',
-      email: 'g.thorne@veritas.edu',
+      email: 'g.thorne@unity.edu',
       office: 'Gauss Pavilion 308',
     },
     term: 'Fall 2026',
@@ -438,7 +436,7 @@ export const INITIAL_COURSES: Course[] = [
       id: 'inst-4',
       name: 'Dr. Rachel Zimmerman',
       title: 'Associate Professor',
-      email: 'r.zimmerman@veritas.edu',
+      email: 'r.zimmerman@unity.edu',
       office: 'Franklin BioLab 114',
     },
     term: 'Fall 2026',
@@ -468,7 +466,7 @@ export const INITIAL_COURSES: Course[] = [
       id: 'inst-3',
       name: 'Dr. Gregory Thorne',
       title: 'Reader in Probability & Economics',
-      email: 'g.thorne@veritas.edu',
+      email: 'g.thorne@unity.edu',
       office: 'Gauss Pavilion 308',
     },
     term: 'Fall 2026',
@@ -487,10 +485,10 @@ export const INITIAL_COURSES: Course[] = [
   },
 ];
 
-export const INITIAL_GRADES: StudentGradeRecord[] = [
+export const INITIAL_GRADES = [
   {
     id: 'g-1',
-    studentId: 's-1', // Maya Lin
+    studentId: 's-1',
     courseId: 'c-1',
     scores: { 'asm-1': 96, 'asm-2': 94, 'asm-3': 98, 'asm-4': 95, 'asm-5': 100 },
     weightedPercentage: 96.0,
@@ -502,7 +500,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-2',
-    studentId: 's-2', // Marcus Sterling
+    studentId: 's-2',
     courseId: 'c-1',
     scores: { 'asm-1': 84, 'asm-2': 82, 'asm-3': 88, 'asm-4': 80, 'asm-5': 90 },
     weightedPercentage: 83.8,
@@ -514,7 +512,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-3',
-    studentId: 's-3', // Sofia Alvarez
+    studentId: 's-3',
     courseId: 'c-1',
     scores: { 'asm-1': 92, 'asm-2': 95, 'asm-3': 94, 'asm-4': 93, 'asm-5': 100 },
     weightedPercentage: 94.4,
@@ -526,7 +524,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-4',
-    studentId: 's-4', // Devon Choudhury
+    studentId: 's-4',
     courseId: 'c-1',
     scores: { 'asm-1': 70, 'asm-2': 68, 'asm-3': 74, 'asm-4': 65, 'asm-5': 75 },
     weightedPercentage: 69.8,
@@ -538,7 +536,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-5',
-    studentId: 's-5', // Amara Okafor
+    studentId: 's-5',
     courseId: 'c-1',
     scores: { 'asm-1': 89, 'asm-2': 91, 'asm-3': 90, 'asm-4': 88, 'asm-5': 95 },
     weightedPercentage: 90.1,
@@ -550,7 +548,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-6',
-    studentId: 's-6', // Liam O'Connor
+    studentId: 's-6',
     courseId: 'c-1',
     scores: { 'asm-1': 88, 'asm-2': 85, 'asm-3': 86, 'asm-4': 84, 'asm-5': 90 },
     weightedPercentage: 86.1,
@@ -562,7 +560,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-7',
-    studentId: 's-7', // Elena Rostova
+    studentId: 's-7',
     courseId: 'c-1',
     scores: { 'asm-1': 100, 'asm-2': 98, 'asm-3': 100, 'asm-4': 97, 'asm-5': 100 },
     weightedPercentage: 98.7,
@@ -574,7 +572,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-8',
-    studentId: 's-8', // Kofi Boateng
+    studentId: 's-8',
     courseId: 'c-1',
     scores: { 'asm-1': 55, 'asm-2': 52, 'asm-3': 60, 'asm-4': 48, 'asm-5': 70 },
     weightedPercentage: 56.0,
@@ -586,7 +584,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-10',
-    studentId: 's-10', // Julian Mercer
+    studentId: 's-10',
     courseId: 'c-1',
     scores: { 'asm-1': 82, 'asm-2': 80, 'asm-3': 85, 'asm-4': 81, 'asm-5': 90 },
     weightedPercentage: 82.7,
@@ -598,7 +596,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-11',
-    studentId: 's-11', // Hana Takahashi
+    studentId: 's-11',
     courseId: 'c-1',
     scores: { 'asm-1': 94, 'asm-2': 92, 'asm-3': 93, 'asm-4': 90, 'asm-5': 100 },
     weightedPercentage: 92.9,
@@ -610,7 +608,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
   {
     id: 'g-12',
-    studentId: 's-12', // Gabriel Santoro
+    studentId: 's-12',
     courseId: 'c-1',
     scores: { 'asm-1': 86, 'asm-2': 88, 'asm-3': 84, 'asm-4': 85, 'asm-5': 90 },
     weightedPercentage: 86.2,
@@ -622,7 +620,7 @@ export const INITIAL_GRADES: StudentGradeRecord[] = [
   },
 ];
 
-export const INITIAL_LIVE_SESSION: AttendanceSession = {
+export const INITIAL_LIVE_SESSION = {
   id: 'sess-today',
   courseId: 'c-1',
   courseCode: 'CS-301',
@@ -649,7 +647,7 @@ export const INITIAL_LIVE_SESSION: AttendanceSession = {
   notes: 'Covered Potential Method for amortized bounds. Assigned Problem Set 5.',
 };
 
-export const PAST_SESSIONS: AttendanceSession[] = [
+export const PAST_SESSIONS = [
   {
     id: 'sess-17',
     courseId: 'c-1',

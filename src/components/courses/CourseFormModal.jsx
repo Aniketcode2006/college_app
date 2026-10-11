@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useCollege } from '../../context/CollegeContext';
-import { Course, Department } from '../../types';
+import { useCollege } from '../../context/CollegeContext.jsx';
 import { X, BookOpen, AlertCircle } from 'lucide-react';
 
-interface CourseFormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  initialCourse?: Course | null;
-}
-
-const DEPARTMENTS: Department[] = [
+const DEPARTMENTS = [
   'Computer Science & Engineering',
   'Electrical & Computer Engineering',
   'Biological & Biomedical Sciences',
@@ -17,7 +10,7 @@ const DEPARTMENTS: Department[] = [
   'Business & Economics',
 ];
 
-export const CourseFormModal: React.FC<CourseFormModalProps> = ({
+export const CourseFormModal = ({
   isOpen,
   onClose,
   initialCourse,
@@ -27,20 +20,20 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
   const [code, setCode] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [department, setDepartment] = useState<Department>('Computer Science & Engineering');
-  const [credits, setCredits] = useState<number>(4);
+  const [department, setDepartment] = useState('Computer Science & Engineering');
+  const [credits, setCredits] = useState(4);
   const [prerequisitesInput, setPrerequisitesInput] = useState('');
-  const [capacity, setCapacity] = useState<number>(40);
+  const [capacity, setCapacity] = useState(40);
   const [instructorName, setInstructorName] = useState('Dr. Evelyn Vance');
   const [instructorTitle, setInstructorTitle] = useState('Professor & Department Chair');
-  const [instructorEmail, setInstructorEmail] = useState('e.vance@veritas.edu');
+  const [instructorEmail, setInstructorEmail] = useState('e.vance@unity.edu');
   const [instructorOffice, setInstructorOffice] = useState('Turing Hall 410');
   const [term, setTerm] = useState('Fall 2026');
-  const [scheduleDays, setScheduleDays] = useState<string[]>(['Mon', 'Wed', 'Fri']);
+  const [scheduleDays, setScheduleDays] = useState(['Mon', 'Wed', 'Fri']);
   const [scheduleTime, setScheduleTime] = useState('10:00 AM - 11:30 AM');
   const [room, setRoom] = useState('Hall B · Turing Amphitheater');
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (initialCourse) {
@@ -69,7 +62,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
       setCapacity(40);
       setInstructorName('Dr. Evelyn Vance');
       setInstructorTitle('Professor & Department Chair');
-      setInstructorEmail('e.vance@veritas.edu');
+      setInstructorEmail('e.vance@unity.edu');
       setInstructorOffice('Turing Hall 410');
       setTerm('Fall 2026');
       setScheduleDays(['Mon', 'Wed', 'Fri']);
@@ -81,7 +74,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!code.trim()) {
       setError('Course code is required (e.g. CS-301).');
@@ -133,7 +126,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
     onClose();
   };
 
-  const handleDayToggle = (day: string) => {
+  const handleDayToggle = (day) => {
     setScheduleDays((prev) =>
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     );
@@ -143,7 +136,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs overflow-y-auto">
       <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden my-8">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
               <BookOpen className="w-4 h-4" />
@@ -159,7 +152,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1 rounded-md transition-colors"
+            className="text-slate-400 hover:text-slate-600 p-1 rounded-md transition-colors cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="w-4 h-4" />
@@ -167,7 +160,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[78vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[76vh] overflow-y-auto">
           {error && (
             <div className="flex items-center gap-2 p-3 text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded-lg">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -175,7 +168,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Course Code *
@@ -218,14 +211,14 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Department
               </label>
               <select
                 value={department}
-                onChange={(e) => setDepartment(e.target.value as Department)}
+                onChange={(e) => setDepartment(e.target.value)}
                 className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
               >
                 {DEPARTMENTS.map((dept) => (
@@ -284,7 +277,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
 
           <div className="pt-2 border-t border-slate-100">
             <h3 className="text-xs font-semibold text-slate-900 mb-2">Faculty & Schedule</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label className="block text-xs text-slate-600 mb-1">Instructor Name</label>
                 <input
@@ -305,7 +298,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-3">
               <div>
                 <label className="block text-xs text-slate-600 mb-1">Lecture Time</label>
                 <input
@@ -338,7 +331,7 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
                       type="button"
                       key={day}
                       onClick={() => handleDayToggle(day)}
-                      className={`px-2.5 py-1 text-xs rounded-md border transition-colors ${
+                      className={`px-2.5 py-1 text-xs rounded-md border transition-colors cursor-pointer ${
                         isSelected
                           ? 'bg-slate-900 text-white border-slate-900 font-semibold'
                           : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
@@ -353,17 +346,17 @@ export const CourseFormModal: React.FC<CourseFormModalProps> = ({
           </div>
 
           {/* Form Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+              className="px-3.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="px-3.5 py-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
             >
               {initialCourse ? 'Save Changes' : 'Create Course'}
             </button>

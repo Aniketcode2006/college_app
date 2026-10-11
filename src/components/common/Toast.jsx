@@ -1,8 +1,8 @@
 import React from 'react';
-import { useCollege } from '../../context/CollegeContext';
+import { useCollege } from '../../context/CollegeContext.jsx';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
-export const ToastContainer: React.FC = () => {
+export const ToastContainer = () => {
   const { toasts, dismissToast } = useCollege();
 
   if (toasts.length === 0) return null;

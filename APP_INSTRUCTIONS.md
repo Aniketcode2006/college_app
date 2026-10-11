@@ -1,4 +1,4 @@
-# Veritas College Management System — Custom Instructions & Design Guidelines
+# Unity College Management System — Custom Instructions & Design Guidelines
 
 ## 1. Design System & Aesthetics
 - **Framework & Styling**: React 19 + TypeScript + Tailwind CSS (v4).

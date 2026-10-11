@@ -11,6 +11,24 @@
   }
 }
 
+/* Compact Table System for clean, high-density data viewing */
+.table-compact th {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  font-size: 0.6875rem !important; /* 11px */
+  letter-spacing: 0.025em !important;
+}
+
+.table-compact td {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  font-size: 0.75rem !important; /* 12px */
+}
+
 /* Custom scrollbar for clean UI */
 ::-webkit-scrollbar {
   width: 6px;
@@ -26,3 +44,4 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
